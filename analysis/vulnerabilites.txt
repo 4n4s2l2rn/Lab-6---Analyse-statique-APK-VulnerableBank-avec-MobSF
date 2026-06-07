@@ -1,0 +1,85 @@
+=== VULNÉRABILITÉS IDENTIFIÉES PAR MOBSF ===
+
+--- [V-01] CRITIQUE — Secrets hardcodés dans strings.xml ---
+  Fichier    : app/src/main/res/values/strings.xml
+  Détails    :
+    - Clé Stripe LIVE : sk_live_51HbNc2LkQ7pA9mR4...
+    - Clé Stripe publishable : pk_live_51HbNc2LkQ7...
+    - Clé Google Maps API : AIzaSyD4F8kzX9mP2qR7...
+    - Clé Firebase : AIzaSyBkL2mN9pQ4wR6tX...
+    - Mot de passe BDD production : Bank@dm1n_S3cr3t_2024!
+    - Secret JWT : vB@nk_JWT_S3cr3t_K3y_d0_n0t_sh4r3_2024
+    - Clé AES : 3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F
+    - Credentials SMTP : Smtp_P@ssw0rd_2024
+    - PIN admin hardcodé : 1234
+
+--- [V-02] CRITIQUE — Désactivation de la vérification TLS ---
+  Fichier    : ApiService.java:32-52 (méthode disableSslVerification)
+  Détails    : TrustManager acceptant tous les certificats sans vérification,
+               HostnameVerifier retournant true pour tous les hostnames.
+               Appelé avant chaque requête réseau.
+
+--- [V-03] CRITIQUE — Mode débogage activé en production ---
+  Fichier    : AndroidManifest.xml (android:debuggable="true")
+               app/build.gradle (debuggable true dans buildType release)
+  Détails    : Permet l'attachement d'un débogueur, l'extraction de données,
+               l'exécution de code arbitraire via ADB.
+
+--- [V-04] CRITIQUE — Injection SQL ---
+  Fichier    : LoginActivity.java:31 (méthode authenticateUser)
+  Détails    : Concaténation directe des entrées utilisateur dans la requête SQL.
+               Payload exemple : ' OR '1'='1 → bypass authentification complet.
+
+--- [V-05] CRITIQUE — ContentProvider exposé sans permission ---
+  Fichier    : AndroidManifest.xml + UserDataProvider.java
+  Détails    : readPermission="" et writePermission="" — accès complet aux
+               données bancaires (mots de passe, numéros de carte, CVV, PIN)
+               depuis toute application tierce sans permission.
+
+--- [V-06] CRITIQUE — Exfiltration de SMS ---
+  Fichier    : SmsReceiver.java
+  Détails    : Tous les SMS entrants (OTP, codes bancaires) sont envoyés
+               vers http://collect.vulnerablebank.com/sms via HTTP en clair.
+
+--- [V-07] ÉLEVÉ — Stockage de données sensibles en clair ---
+  Fichier    : DatabaseHelper.java (table users)
+  Détails    : Mots de passe, numéros de carte, CVV, PIN stockés sans chiffrement
+               dans la base SQLite locale.
+
+--- [V-08] ÉLEVÉ — SharedPreferences en MODE_WORLD_READABLE ---
+  Fichier    : MainActivity.java:38
+  Détails    : SharedPreferences créées avec MODE_WORLD_READABLE permettant
+               à toute application de lire les credentials et tokens stockés.
+
+--- [V-09] ÉLEVÉ — Credentials loggés dans Logcat ---
+  Fichier    : MainActivity.java:44, LoginActivity.java:38, ApiService.java:71
+  Détails    : Username, password, tokens JWT loggés via Log.d()/Log.e().
+               Accessible via ADB logcat sans permission root.
+
+--- [V-10] ÉLEVÉ — Chiffrement faible (MD5 + AES/ECB) ---
+  Fichier    : LoginActivity.java:47 (hashPassword), LoginActivity.java:60 (encryptData)
+  Détails    : MD5 cryptographiquement cassé depuis 2004, aucun sel ajouté.
+               AES/ECB révèle des patterns dans les données chiffrées.
+
+--- [V-11] ÉLEVÉ — Composants exportés non protégés ---
+  Fichier    : AndroidManifest.xml
+  Détails    : LoginActivity, DashboardActivity, TransferActivity, SyncService,
+               UserDataProvider accessibles depuis toute application tierce.
+
+--- [V-12] MOYEN — Bibliothèques avec CVE connues ---
+  Fichier    : app/build.gradle
+  Détails    : OkHttp 3.12.0 (CVE-2021-0341), Commons-Compress 1.19 (CVE-2021-35515)
+
+--- [V-13] MOYEN — android:allowBackup="true" ---
+  Fichier    : AndroidManifest.xml
+  Détails    : Sauvegarde ADB possible → extraction de la base de données locale.
+
+--- [V-14] FAIBLE — Absence de certificate pinning ---
+  Détails    : Aucun mécanisme de pinning → proxy d'interception trivial.
+
+=== SECRETS HARDCODÉS DANS LE CODE JAVA ===
+  MainActivity.java:13  → AES_KEY = "3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F"
+  MainActivity.java:16  → BACKDOOR_USER = "testadmin" / BACKDOOR_PASS = "testpass123"
+  ApiService.java:20    → BASE_URL = "http://api.vulnerablebank.com/v1/"
+  ApiService.java:21    → DEV_URL  = "http://192.168.1.100:8080/api/dev/"
+  ApiService.java:24    → API_KEY  = "AIzaSyD4F8kzX9mP2qR7tN1vW3uE6hL0cJ5bY8A"

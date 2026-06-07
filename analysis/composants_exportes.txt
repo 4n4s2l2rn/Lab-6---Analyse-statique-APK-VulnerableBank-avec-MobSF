@@ -1,0 +1,44 @@
+=== COMPOSANTS ANDROID EXPORTÉS (7 détectés) ===
+
+--- ACTIVITÉS (4) ---
+
+  [CRITIQUE] com.example.vulnerablebank.LoginActivity
+             android:exported="true" — aucune permission requise
+             Risque : Bypass d'authentification depuis toute application tierce
+
+  [CRITIQUE] com.example.vulnerablebank.DashboardActivity
+             android:exported="true" — aucune permission requise
+             Risque : Accès au tableau de bord sans authentification
+
+  [CRITIQUE] com.example.vulnerablebank.TransferActivity
+             android:exported="true" via intent-filter implicite
+             Intent-filter action: "com.example.vulnerablebank.TRANSFER"
+             Risque : Déclenchement de transferts bancaires non autorisés
+             depuis toute application installée sur le téléphone
+
+  [INFO]     com.example.vulnerablebank.MainActivity
+             android:exported="true" (requis pour launcher)
+
+--- SERVICES (1) ---
+
+  [ÉLEVÉ]   com.example.vulnerablebank.SyncService
+             android:exported="true" — aucune permission requise
+             Risque : Démarrage forcé du service de synchronisation
+             par n'importe quelle application tierce
+
+--- BROADCAST RECEIVERS (1) ---
+
+  [CRITIQUE] com.example.vulnerablebank.SmsReceiver
+             android:exported="true" — intercepte android.provider.Telephony.SMS_RECEIVED
+             android:priority="999" (haute priorité, s'exécute avant les autres apps)
+             Risque : Exfiltration de tous les SMS vers serveur externe
+
+--- CONTENT PROVIDERS (1) ---
+
+  [CRITIQUE] com.example.vulnerablebank.UserDataProvider
+             android:exported="true"
+             android:readPermission=""   ← VIDE : lecture sans permission
+             android:writePermission=""  ← VIDE : écriture sans permission
+             Authority : com.example.vulnerablebank.provider
+             Risque : Accès complet aux données bancaires (mots de passe,
+             numéros de carte, CVV, PIN) depuis toute application tierce

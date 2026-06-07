@@ -1,0 +1,49 @@
+=== PERMISSIONS DANGEREUSES (14 détectées) ===
+
+  [CRITIQUE] android.permission.READ_SMS
+             → Accès en lecture à tous les SMS entrants (OTP bancaires, codes 2FA)
+
+  [CRITIQUE] android.permission.RECEIVE_SMS
+             → Interception des SMS entrants en temps réel
+
+  [CRITIQUE] android.permission.SEND_SMS
+             → Envoi de SMS à la charge de l'utilisateur (fraude possible)
+
+  [ÉLEVÉ]   android.permission.READ_CONTACTS
+             → Accès au carnet d'adresses complet
+
+  [ÉLEVÉ]   android.permission.WRITE_CONTACTS
+             → Modification des contacts
+
+  [ÉLEVÉ]   android.permission.ACCESS_FINE_LOCATION
+             → Géolocalisation précise (GPS)
+
+  [ÉLEVÉ]   android.permission.ACCESS_COARSE_LOCATION
+             → Géolocalisation approximative
+
+  [ÉLEVÉ]   android.permission.CAMERA
+             → Accès à la caméra
+
+  [ÉLEVÉ]   android.permission.RECORD_AUDIO
+             → Accès au microphone
+
+  [ÉLEVÉ]   android.permission.READ_EXTERNAL_STORAGE
+             → Lecture de la carte SD / stockage externe
+
+  [ÉLEVÉ]   android.permission.WRITE_EXTERNAL_STORAGE
+             → Écriture sur stockage externe
+
+  [ÉLEVÉ]   android.permission.READ_CALL_LOG
+             → Accès à l'historique des appels
+
+=== PERMISSIONS NORMALES (3 détectées) ===
+
+  [INFO] android.permission.INTERNET
+  [INFO] android.permission.ACCESS_NETWORK_STATE
+  [INFO] android.permission.RECEIVE_BOOT_COMPLETED
+
+=== ÉVALUATION ===
+
+Permissions justifiées par la fonction bancaire : INTERNET, ACCESS_NETWORK_STATE
+Permissions excessives non justifiées : READ_SMS, SEND_SMS, RECORD_AUDIO,
+READ_CONTACTS, WRITE_CONTACTS, READ_CALL_LOG (aucune justification fonctionnelle)

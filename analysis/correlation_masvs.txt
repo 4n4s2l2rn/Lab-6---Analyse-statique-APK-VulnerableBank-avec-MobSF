@@ -1,0 +1,88 @@
+=== CORRÉLATION OWASP MASVS / MASTG ===
+
+-------------------------------------------------------------------
+Vulnérabilité 1 : Secrets hardcodés dans le code et les ressources
+-------------------------------------------------------------------
+Référence MASVS   : MASVS-STORAGE-2
+Description       : L'application ne doit pas stocker de données sensibles
+                    en dehors du stockage sécurisé de l'appareil.
+Preuve            : strings.xml contient clés Stripe LIVE, JWT secret,
+                    clés AES, credentials BDD et SMTP en clair.
+                    MainActivity.java:13-16 contient AES_KEY et backdoor credentials.
+Impact            : Compromission complète des systèmes backend si l'APK
+                    est décompilé (outil apktool, jadx). Risque financier direct
+                    avec la clé Stripe live.
+Test MASTG        : MASTG-TEST-0001 (Testing for Sensitive Data in Local Storage)
+
+-------------------------------------------------------------------
+Vulnérabilité 2 : Communication réseau non sécurisée + TLS désactivé
+-------------------------------------------------------------------
+Référence MASVS   : MASVS-NETWORK-1
+Description       : L'application doit chiffrer toutes les communications réseau
+                    avec TLS et valider les certificats du serveur.
+Preuve            : usesCleartextTraffic="true" dans AndroidManifest.xml.
+                    ApiService.java méthode disableSslVerification() désactive
+                    entièrement la vérification des certificats SSL/TLS.
+                    Toutes les requêtes API utilisent http:// (non https://).
+Impact            : Attaque Man-in-the-Middle triviale sur tout réseau.
+                    Interception des credentials et données bancaires en clair.
+Test MASTG        : MASTG-TEST-0020 (Testing for Unencrypted Sensitive Data on the Network)
+
+-------------------------------------------------------------------
+Vulnérabilité 3 : Composants Android exportés sans protection
+-------------------------------------------------------------------
+Référence MASVS   : MASVS-PLATFORM-1
+Description       : L'application doit implémenter les mécanismes de permission
+                    Android pour protéger l'accès aux composants exportés.
+Preuve            : AndroidManifest.xml — 6 composants exportés sans permission :
+                    LoginActivity, DashboardActivity, TransferActivity,
+                    SyncService, SmsReceiver, UserDataProvider (readPermission="").
+Impact            : Bypass d'authentification, déclenchement de transferts
+                    non autorisés, accès aux données bancaires depuis toute app.
+Test MASTG        : MASTG-TEST-0024 (Testing for Vulnerable Implementation of PendingIntent)
+
+-------------------------------------------------------------------
+Vulnérabilité 4 : Stockage non sécurisé (SQLite non chiffré + World-Readable)
+-------------------------------------------------------------------
+Référence MASVS   : MASVS-STORAGE-1
+Description       : L'application ne doit pas stocker de données sensibles
+                    dans des emplacements lisibles par d'autres applications.
+Preuve            : DatabaseHelper.java — table users contient mot de passe,
+                    numéro de carte, CVV et PIN en clair dans SQLite.
+                    MainActivity.java:38 — SharedPreferences en MODE_WORLD_READABLE.
+Impact            : Extraction des données bancaires par toute application tierce
+                    ou par un attaquant ayant accès physique à l'appareil.
+Test MASTG        : MASTG-TEST-0001 (Testing for Sensitive Data in Local Storage)
+
+-------------------------------------------------------------------
+Vulnérabilité 5 : Injection SQL
+-------------------------------------------------------------------
+Référence MASVS   : MASVS-CODE-1
+Description       : L'application doit valider et assainir toutes les entrées
+                    provenant de sources non fiables.
+Preuve            : LoginActivity.java:31 — requête SQL construite par
+                    concaténation directe de l'input utilisateur.
+                    Exemple : username = "' OR '1'='1" → authentification bypassée.
+Impact            : Contournement de l'authentification, extraction de toute
+                    la base de données utilisateurs.
+Test MASTG        : MASTG-TEST-0015 (Testing for SQL Injection Vulnerabilities)
+
+=== TESTS MASTG COMPLÉMENTAIRES RECOMMANDÉS ===
+
+Test 1 : MASTG-TEST-0007 — Testing for Sensitive Data in Logs
+         Objectif : Vérifier que Log.d/Log.e ne contient pas de données sensibles.
+         Procédure : adb logcat | grep -E "(password|token|card|pin|secret)"
+         Pertinent pour V-09 (credentials loggés).
+
+Test 2 : MASTG-TEST-0031 — Testing for Weak Cryptography
+         Objectif : Vérifier les algorithmes de chiffrement utilisés.
+         Procédure : Décompiler l'APK (jadx) et analyser les usages de MessageDigest,
+                     Cipher, KeyStore. Vérifier l'absence de MD5, DES, AES/ECB.
+         Pertinent pour V-10 (MD5 + AES/ECB).
+
+Test 3 : MASTG-TEST-0028 — Testing Implicit Intents
+         Objectif : Vérifier que les composants exportés ne peuvent pas être
+                    déclenchés par des applications malveillantes.
+         Procédure : Créer une app de test envoyant un Intent explicite à
+                     TransferActivity avec des montants arbitraires.
+         Pertinent pour V-11 (TransferActivity exportée).

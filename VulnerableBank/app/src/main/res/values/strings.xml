@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">VulnerableBank</string>
+
+    <!-- Clés API hardcodées -->
+    <string name="google_maps_api_key">AIzaSyD4F8kzX9mP2qR7tN1vW3uE6hL0cJ5bY8A</string>
+    <string name="firebase_api_key">AIzaSyBkL2mN9pQ4wR6tX8uF1vE3hC7dZ0bW5A</string>
+    <string name="stripe_secret_key">sk_live_51HbNc2LkQ7pA9mR4vT6uE8fX2dL0wC3bZ1kJ</string>
+    <string name="stripe_publishable_key">pk_live_51HbNc2LkQ7pA9mR4vT6uE8fX2dL0wC3bZ1kJ</string>
+
+    <!-- Credentials base de données hardcodés -->
+    <string name="db_host">mysql.internal.vulnerablebank.com</string>
+    <string name="db_user">admin_prod</string>
+    <string name="db_password">Bank@dm1n_S3cr3t_2024!</string>
+    <string name="db_name">vbank_production</string>
+
+    <!-- Token JWT secret -->
+    <string name="jwt_secret">vB@nk_JWT_S3cr3t_K3y_d0_n0t_sh4r3_2024</string>
+
+    <!-- Endpoints d'API -->
+    <string name="api_base_url">http://api.vulnerablebank.com/v1/</string>
+    <string name="api_dev_url">http://192.168.1.100:8080/api/dev/</string>
+    <string name="api_staging_url">https://staging-api.vulnerablebank.com/v2/</string>
+    <string name="analytics_endpoint">http://analytics.vulnerablebank.com/track</string>
+
+    <!-- Credentials admin hardcodés -->
+    <string name="admin_username">superadmin</string>
+    <string name="admin_password">Admin_Pass_2024!</string>
+    <string name="admin_pin">1234</string>
+
+    <!-- Clé de chiffrement AES hardcodée -->
+    <string name="encryption_key">3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F</string>
+    <string name="iv_vector">A1B2C3D4E5F60718</string>
+
+    <!-- Informations serveur SMTP -->
+    <string name="smtp_host">smtp.vulnerablebank.com</string>
+    <string name="smtp_user">notifications@vulnerablebank.com</string>
+    <string name="smtp_password">Smtp_P@ssw0rd_2024</string>
+
+    <!-- Debug flags -->
+    <string name="debug_mode">true</string>
+    <string name="log_sensitive_data">true</string>
+</resources>

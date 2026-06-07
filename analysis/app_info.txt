@@ -1,0 +1,17 @@
+=== INFORMATIONS GÉNÉRALES DE L'APPLICATION ===
+
+Package Name    : com.example.vulnerablebank
+App Name        : VulnerableBank
+Version Name    : 1.0.0
+Version Code    : 1
+Min SDK         : 21  (Android 5.0 Lollipop)
+Target SDK      : 33  (Android 13)
+Taille APK      : 4.2 MB
+
+=== CONFIGURATIONS CRITIQUES ===
+
+android:debuggable          = true   ⚠️  CRITIQUE — débogage activé en production
+android:allowBackup         = true   ⚠️  ÉLEVÉ   — sauvegarde ADB possible
+android:usesCleartextTraffic= true   ⚠️  CRITIQUE — HTTP non chiffré autorisé
+networkSecurityConfig       = absent ⚠️  MOYEN   — aucune config réseau explicite
+minifyEnabled (release)     = false  ⚠️  MOYEN   — pas d'obfuscation du code

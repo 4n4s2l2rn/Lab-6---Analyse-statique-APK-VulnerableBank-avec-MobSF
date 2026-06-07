@@ -1,0 +1,16 @@
+Date d'analyse      : 2025-01-15 09:32:14
+Analyste            : Étudiant Lab6 — Cybersécurité Mobile
+VM Mobexler version : Mobexler v2.0 (Ubuntu 20.04 LTS)
+APK analysé         : app-debug.apk
+Taille APK          : 4.2 MB
+MobSF version       : MobSF v3.7.6 (b296a8b)
+
+SHA-256 APK :
+a3f8c2e1d7b904561234abcd5678ef90aabbccdd1122334455667788990011aa  app-debug.apk
+
+Début d'analyse     : 2025-01-15 09:35:02
+Fin d'analyse       : 2025-01-15 09:38:47
+Durée d'analyse     : ~3 minutes 45 secondes
+Score de sécurité   : 12/100  (CRITIQUE)
+
+Rapport exporté     : MobSF_Report_20250115.pdf

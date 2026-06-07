@@ -1,0 +1,26 @@
+=== CONFIGURATION RÉSEAU ===
+
+usesCleartextTraffic    : true  ← CRITIQUE : trafic HTTP non chiffré autorisé
+networkSecurityConfig   : ABSENT (aucun fichier network_security_config.xml)
+Certificats épinglés    : NON (aucun certificate pinning)
+Domaines de confiance   : Non configurés
+
+=== ANALYSE DU TRAFIC RÉSEAU ===
+
+Protocoles utilisés     :
+  → HTTP  (non chiffré) : api.vulnerablebank.com, collect.vulnerablebank.com,
+                          sync.vulnerablebank.com, analytics.vulnerablebank.com
+  → HTTPS              : staging-api.vulnerablebank.com (staging seulement)
+
+Vérification TLS        : DÉSACTIVÉE dans ApiService.java (disableSslVerification)
+  → TrustManager personnalisé acceptant tous les certificats
+  → HostnameVerifier retournant toujours true
+  → Vulnérable aux attaques Man-in-the-Middle (MiTM)
+
+=== RISQUES IDENTIFIÉS ===
+
+  [CRITIQUE] Trafic bancaire (authentification, transferts) en HTTP non chiffré
+  [CRITIQUE] Vérification SSL/TLS désactivée par code → MiTM possible
+  [CRITIQUE] Credentials (username/password) transmis en clair via HTTP POST
+  [ÉLEVÉ]    Aucun certificate pinning → interception par proxy possible
+  [ÉLEVÉ]    Données financières transmises sans chiffrement

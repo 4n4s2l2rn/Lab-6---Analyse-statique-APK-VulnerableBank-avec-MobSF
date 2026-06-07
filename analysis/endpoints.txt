@@ -1,0 +1,24 @@
+=== ENDPOINTS IDENTIFIÉS DANS L'APPLICATION ===
+
+--- PRODUCTION (HTTP — non chiffré) ---
+  http://api.vulnerablebank.com/v1/              → API principale
+  http://api.vulnerablebank.com/v1/auth/login    → Authentification
+  http://collect.vulnerablebank.com/sms          → Exfiltration SMS
+  http://sync.vulnerablebank.com/data            → Synchronisation données
+  http://analytics.vulnerablebank.com/track      → Analytics
+
+--- DÉVELOPPEMENT / TEST (hardcodés dans strings.xml) ---
+  http://192.168.1.100:8080/api/dev/             → Serveur de dev local exposé
+  https://staging-api.vulnerablebank.com/v2/     → Environnement de staging
+
+--- SERVICES TIERS ---
+  https://api.stripe.com                         → Paiements (clé live hardcodée)
+  https://maps.googleapis.com                    → Google Maps
+  https://firebase.googleapis.com                → Firebase
+
+=== PROBLÈMES IDENTIFIÉS ===
+
+  [CRITIQUE] URL de développement interne (192.168.1.100) exposée dans l'APK de prod
+  [CRITIQUE] Endpoints d'exfiltration SMS vers serveur externe
+  [ÉLEVÉ]    Clé Stripe LIVE hardcodée dans strings.xml (risque financier direct)
+  [ÉLEVÉ]    Toutes les communications API en HTTP non chiffré

@@ -1,0 +1,58 @@
+=== TOP VULNÉRABILITÉS — CLASSEMENT PAR SÉVÉRITÉ ===
+
+🔴 CRITIQUE (Score CVSS estimé ≥ 9.0)
+
+  [1] Secrets hardcodés (Stripe LIVE, JWT, AES key, BDD password)
+      → Impact financier direct. L'APK peut être décompilé en 30 secondes.
+
+  [2] Vérification TLS désactivée par code (disableSslVerification)
+      → MiTM trivial sur tout réseau Wi-Fi public. Credentials interceptables.
+
+  [3] ContentProvider sans permission (UserDataProvider)
+      → Toute application peut lire mots de passe, numéros de carte, CVV, PIN.
+
+  [4] Exfiltration SMS vers serveur externe (SmsReceiver)
+      → Interception des OTP bancaires. Possible contournement de la 2FA.
+
+  [5] Injection SQL dans l'authentification (LoginActivity.java:31)
+      → Bypass complet de l'authentification avec payload trivial.
+
+🟠 ÉLEVÉ (Score CVSS estimé 7.0 – 8.9)
+
+  [6] Mode débogage actif en production (android:debuggable="true")
+      → Attachement de débogueur ADB, extraction de données en mémoire.
+
+  [7] Credentials loggés dans Logcat (MainActivity, LoginActivity, ApiService)
+      → Accessible via ADB ou par application avec READ_LOGS permission.
+
+  [8] Chiffrement MD5 sans sel + AES/ECB
+      → MD5 cassable par tables arc-en-ciel. AES/ECB révèle les patterns.
+
+  [9] Composants Android exportés sans protection (6 composants)
+      → Bypass authentification, transferts non autorisés depuis app tierce.
+
+🟡 MOYEN (Score CVSS estimé 4.0 – 6.9)
+
+  [10] android:allowBackup="true" → extraction BDD via ADB backup
+  [11] Bibliothèques OkHttp et Commons-Compress avec CVE connues
+  [12] SharedPreferences en MODE_WORLD_READABLE
+
+🔵 FAIBLE / INFO
+
+  [13] Absence de certificate pinning (facilite l'interception)
+  [14] Absence de network_security_config.xml
+  [15] Code non obfusqué (minifyEnabled = false)
+
+=== FAUX POSITIFS POTENTIELS ===
+
+  Alerte MobSF : "Use of Random instead of SecureRandom"
+  Raison FP    : Utilisé uniquement pour des animations UI, pas pour
+                 de la cryptographie. Non pertinent dans ce contexte.
+
+  Alerte MobSF : "WebView loadUrl with variable"
+  Raison FP    : Aucun WebView utilisé dans cette application.
+                 Alerte déclenchée sur une dépendance tierce (OkHttp).
+
+  Alerte MobSF : "Base64 decode usage"
+  Raison FP    : Utilisé pour l'encodage de tokens standards (JWT),
+                 pas pour masquer des données sensibles.

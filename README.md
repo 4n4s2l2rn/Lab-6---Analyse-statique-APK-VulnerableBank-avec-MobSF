@@ -4,6 +4,7 @@
 > Analyse statique d'une application Android volontairement vulnérable avec l'outil MobSF (Mobile Security Framework)
 
 ---
+<img width="1440" height="1040" alt="image" src="https://github.com/user-attachments/assets/ce5f8062-a931-4c42-b0ec-4066331da3df" />
 
 ## ⚠️ Avertissement
 
